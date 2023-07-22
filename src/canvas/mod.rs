@@ -5,11 +5,16 @@ use minifb::{Key, ScaleMode, Window, WindowOptions};
 use colors::Rgb;
 
 #[derive(Debug)]
+pub struct Dimensions {
+    pub width: usize,
+    pub height: usize,
+}
+
+#[derive(Debug)]
 pub struct Canvas {
     window: Window,
     buffer: Vec<u32>,
-    width: usize,
-    height: usize,
+    pub dimensions: Dimensions,
 }
 
 impl Canvas {
@@ -38,8 +43,7 @@ impl Canvas {
         Canvas {
             window,
             buffer,
-            width,
-            height,
+            dimensions: Dimensions { width, height },
         }
     }
 
@@ -62,7 +66,7 @@ impl Canvas {
     /// The pixel `color` is an [`Rgb` struct](struct.Rgb.html) defining red, green and blue components.
     /// Changes will only become visible when [`display_until_exit`](#method.display_until_exit) is called.
     pub fn put_pixel(&mut self, x: i32, y: i32, color: &Rgb) {
-        let (width, height) = (self.width as i32, self.height as i32);
+        let (width, height) = (self.dimensions.width as i32, self.dimensions.height as i32);
 
         let screen_x = width / 2 + x;
         let screen_y = height / 2 - y - 1;
@@ -84,7 +88,7 @@ impl Canvas {
         // The unwrap causes the code to exit if the update fails
         while self.window.is_open() && !self.window.is_key_down(Key::Escape) {
             self.window
-                .update_with_buffer(&self.buffer, self.width, self.height)
+                .update_with_buffer(&self.buffer, self.dimensions.width, self.dimensions.height)
                 .unwrap();
         }
     }

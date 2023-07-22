@@ -5,4 +5,7 @@ pub use clap::Parser;
 #[command(author, version, about, long_about = None)]
 pub struct GraphicsArgs {
     pub name: String,
+
+    pub width: Option<usize>,
+    pub height: Option<usize>,
 }
